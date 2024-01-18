@@ -191,9 +191,84 @@ class BST(Tree):
 
 
 class Heap(list):
-    pass
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.type = None
+        self.size = 0
+
+
+    def insert(self, obj) -> None:
         
-            
+        
+
+        if self.size == 0:
+            super().append(obj)
+            self.size += 1
+        else:
+            super().append(obj)
+            self.size += 1
+            for i in range((self.size//2)-1, -1, -1):
+                self.heapify(i)
+
+    
+    def delete(self):
+        last = self.pop()
+        self[0] = last
+        
+        for i in range((self.size//2)-1, -1, -1):
+            self.heapify(i)
+
+
+
+
+class Max_Heap(Heap):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.type = "Max"
+        
+
+    def heapify(self, i):
+        largest = i
+        l = 2 * i + 1
+        r = 2 * i + 2
+
+        if l < self.size and self[i] < self[l]:
+            largest = l
+
+        if r < self.size and self[largest] < self[r]:
+            largest = r
+
+        if largest != i:
+            self[i], self[largest] = self[largest], self[i]
+            self.heapify(largest)
+
+
+class Min_Heap(Heap):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.type = "Min"
+    
+    
+    def heapify(self,i):
+        smallest = i
+        l = 2 * i + 1
+        r = 2 * i + 2
+
+        if l < self.size and self[i] > self[l]:
+            smallest = l
+
+        if r < self.size and self[smallest] > self[r]:
+            smallest = r
+
+        if smallest != i:
+            self[i], self[smallest] = self[smallest], self[i]
+            self.heapify(smallest)
+
+
+                
        
 
     
@@ -213,6 +288,8 @@ def main():
     my_tree.insert(Node(4))
     
     print(my_tree.inorder())
+    
+    
     
 
     my_tree.delete(7)
