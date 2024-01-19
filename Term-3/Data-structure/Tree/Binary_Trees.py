@@ -1,4 +1,52 @@
+from datetime import datetime
 from random import randint
+from time import sleep
+
+
+MESSAGE_1 = (
+    "\n### BST ###\n\n"
+    "Enter 0 to stop the program\n"
+    "Enter 1 for creating bst tree\n"
+    "Enter 2 for watching all bst trees\n"
+    "Enter 3 for selecting one bst tree\n"
+    "Enter 4 to insert to the selected tree\n"
+    "Enter 5 to delete from the selected tree\n"
+    "Enter 6 to delete the selected tree\n"
+    "Enter 7 to see the selected tree\n"
+    "Enter 8 to go to the next page\n"
+)
+
+MESSAGE_2 = (
+    "\n### HEAP ###\n"
+    
+    "\n\nEnter 0 to stop the program\n"    
+    "Enter 1 for creating heap tree\n"
+    "Enter 2 for watching all heap trees\n"
+    "Enter 3 for selecting one heap tree\n"
+    "Enter 4 to insert to the selected tree\n"
+    "Enter 5 to delete from the selected tree\n"
+    "Enter 6 to delete the selected tree\n"
+    "Enter 7 to see the selected tree\n"
+    "Enter 8 to go to the previous page\n"
+)  
+
+MESSAGE_ORDER = (
+    
+    
+       
+    "\nEnter 1 for preorder\n"
+    "Enter 2 for inorder\n"
+    "Enter 3 for postorder\n"
+    
+)  
+
+
+MESSAGE_HEAP =(
+
+    "\n Enter 1 to create Max heap"
+    "\n Enter 2 to create Min heap\n"
+
+)
 
 
 
@@ -55,8 +103,10 @@ class Tree:
     
     def __init__(self) -> None:
         self.root = None
-    
-    def inorder(self) -> str:
+        self.created_at = datetime.now().strftime("%H:%M:%S")
+
+
+    def inorder(self) -> list:
         answer = list()
         temp = self.root
         stack = Stack()
@@ -70,7 +120,7 @@ class Tree:
                 temp = temp.right
         return answer
 
-    def preorder(self) -> str:
+    def preorder(self) -> list:
         answer = list()
         temp = self.root
         stack = Stack()
@@ -84,8 +134,11 @@ class Tree:
                 temp = temp.right
         return answer
 
+    def postorder(self) -> list:
+        pass
 
-
+    def __str__(self) -> str:
+        return f"a tree created at {self.created_at} with the root of {self.root}"
 
 class BST(Tree):
     
@@ -196,7 +249,7 @@ class Heap(list):
         super().__init__(*args, **kwargs)
         self.type = None
         self.size = 0
-
+        self.created_at = datetime.now().strftime("%H:%M:%S")
 
     def insert(self, obj) -> None:
         
@@ -219,7 +272,12 @@ class Heap(list):
         for i in range((self.size//2)-1, -1, -1):
             self.heapify(i)
 
-
+    def __str__(self) -> str:
+        return super().__str__()
+    
+    @property
+    def whois(self):
+        return f"a heap created at {self.created_at}"
 
 
 class Max_Heap(Heap):
@@ -279,22 +337,290 @@ class Min_Heap(Heap):
 
 
 
+class Program:
+    def __init__(self) -> None:
+        self.all_bst_trees =[]
+        self.all_heap_trees = []
+        self.bst_selected = None
+        self.heap_selected = None
+    
+    def repeat(self,a,time=1):
+        sleep(time)
+        if a == 1:
+            self.page_one()
+        elif a ==2:
+            self.page_two()
+        
+
+    def page_one(self):
+        print(MESSAGE_1)
+        command = int(input())
+        if command in [0,1,2,3,4,5,6,7,8]:
+            if command == 0 :
+                return 
+            elif command == 1:
+                self.create_bst()
+                self.repeat(1,0.5)
+            elif command == 2:
+                self.display_bst()
+                self.repeat(1)
+            elif command == 3:
+                self.select_bst()
+                self.repeat(1)
+            elif command ==4:
+               self.insert_bst()
+               self.repeat(1)
+            elif command == 5:
+                self.delete_from_bst()
+                self.repeat(1)
+            elif command == 6:
+               self.delete_bst()
+               self.repeat(1)
+            elif command == 7:
+                self.show_me_bst()
+                self.repeat(1)
+            elif command == 8:
+                self.page_two()
+
+        else:
+            print("Bad command")
+            self.repeat(1)
+
+    def page_two(self):
+        command = int(input(MESSAGE_2))
+        if command in [0,1,2,3,4,5,6,7,8]:
+            if command == 0:
+                return
+            elif command == 1:
+                self.create_heap()
+                self.repeat(2)
+            elif command == 2:
+                self.display_heap()
+                self.repeat(2)
+            elif command == 3:
+                self.select_heap()
+                self.repeat(2)
+            elif command == 4:
+                self.insert_heap()
+                self.repeat(2)
+            elif command == 5:
+                self.delete_from_heap()
+                self.repeat(2)
+            elif command ==6:
+                self.delete_heap()
+                self.repeat(2)
+
+            elif command == 7:
+                self.show_me_heap()
+            elif command == 8:
+                self.page_one()
+            
+
+        else:
+            print("bad command")
+            sleep(1)
+            self.page_two()
+    
+    
+
+    def create_bst(self):
+        x = BST()
+        print("Bst created succusfuly\n")
+        self.all_bst_trees.append(x)
+        
+    
+    def display_bst(self):
+        
+        if len(self.all_bst_trees) == 0:
+            print("you dont have any tree , create one\n")
+            sleep(1)
+            self.page_one()
+        else:
+            for tree in self.all_bst_trees:
+                print(tree)
+            print("\n")
+            
+
+    def select_bst(self):
+        if len(self.all_bst_trees) == 0 :
+            print("you dont have bst to choose")
+            
+        else:
+            dictt = dict()
+            for index,object in enumerate(self.all_bst_trees):
+                print(object,"\t",index+1)
+                dictt[index+1]=object
+            command = int(input("Enter the number to select the bst: "))
+            try :
+                self.bst_selected = dictt[command]
+            except :
+                print("bad command")
+                
+            else:
+                print(f"you selected : {self.bst_selected}")
+                
+
+    def insert_bst(self):
+        if self.bst_selected == None:
+            print("first select one tree to work with")
+            
+        else:
+            new_node = Node(int(input("Enter the data for new node:")))
+            self.bst_selected.insert(new_node)
+            print("you inserted new node succesfully")
+            
+    
+    
+
+
+    def delete_from_bst(self):
+        if self.bst_selected == None:
+            print("first select one tree to work with")
+            
+        else:
+            try :
+                data = int(input("which node you want to be deleted(enter its data):"))
+                print(self.bst_selected.delete(data))
+                
+            except:
+                print("this node is not in the tree")
+                
+        
+    def delete_bst(self):
+        if self.bst_selected == None:
+            print("first select one stack to work with")
+            
+        else:
+            for tree in self.all_bst_trees:
+                if tree == self.bst_selected:
+                    self.all_bst_trees.remove(tree)
+        
+            del self.bst_selected
+            print("deleted succusfuly")
+            self.bst_selected = None
+            
+
+    def show_me_bst(self):
+        if self.bst_selected == None:
+            print("first select one tree to work with")
+            
+        else:
+            print(self.bst_selected)
+            command = int(input(MESSAGE_ORDER))
+            if command in [1,2,3]:
+                if command == 1:
+                    print(self.bst_selected.preorder())
+                elif command ==2:
+                    print(self.bst_selected.inorder())
+                elif command == 3:
+                    print(self.bst_selected.postorder())
+            else:
+                print("bad command")
+
+   #heap####################################################################################33
+                
+    def create_heap(self):
+        command = int(input(MESSAGE_HEAP))
+        if command in [1,2]:
+            if command == 1:
+                 x = Max_Heap()
+            elif command ==2:
+                x = Min_Heap()
+        else:
+            print("bad command")
+
+        self.all_heap_trees.append(x)
+        print("Heap created succusfuly\n")
+        
+        
+    
+    def display_heap(self):
+        
+        if len(self.all_heap_trees) == 0:
+            print("you dont have any tree , create one\n")
+            sleep(1)
+            self.page_one()
+        else:
+            for tree in self.all_heap_trees:
+                print(tree.whois)
+            print("\n")
+            
+
+    def select_heap(self):
+        if len(self.all_heap_trees) == 0 :
+            print("you dont have heap to choose")
+            
+        else:
+            dictt = dict()
+            for index,object in enumerate(self.all_heap_trees):
+                print(object,"\t",index+1)
+                dictt[index+1]=object
+            command = int(input("Enter the number to select the heap: "))
+            try :
+                self.heap_selected = dictt[command]
+            except :
+                print("bad command")
+                
+            else:
+                print(f"you selected : {self.heap_selected}    {self.heap_selected.whois} ")
+                
+
+    def insert_heap(self):
+        if self.heap_selected == None:
+            print("first select one heap to work with")
+            
+        else:
+            new_node = (int(input("Enter the data for new node:")))
+            self.heap_selected.insert(new_node)
+            print("you inserted new node succesfully")
+            
+    
+    
+
+
+    def delete_from_heap(self):
+        if self.heap_selected == None:
+            print("first select one tree to work with")
+            
+        else:
+            try :
+                data = int(input("which node you want to be deleted(enter its data):"))
+                print(self.heap_selected.delete(data))
+                
+            except:
+                print("this node is not in the tree")
+                
+        
+    def delete_heap(self):
+        if self.heap_selected == None:
+            print("first select one stack to work with")
+            
+        else:
+            for tree in self.all_bst_trees:
+                if tree == self.heap_selected:
+                    self.all_heap_trees.remove(tree)
+        
+            del self.heap_selected
+            print("deleted succusfuly")
+            self.heap_selected = None
+            
+
+    def show_me_heap(self):
+        if self.heap_selected == None:
+            print("first select one tree to work with")
+            
+        else:
+            print(self.heap_selected)
+            
+            
+
+
 def main():
-    my_tree = BST()
-    my_tree.insert(Node(5))
-    my_tree.insert(Node(3))
-    my_tree.insert(Node(7))
-    my_tree.insert(Node(8))
-    my_tree.insert(Node(4))
-    
-    print(my_tree.inorder())
-    
-    
-    
-
-    my_tree.delete(7)
-    print(my_tree.inorder())
+    my_program = Program()
+    my_program.page_one()
 
 
+if __name__ == "__main__":
+    main()
 
-main()
+    
